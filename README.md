@@ -3,6 +3,8 @@
 ## 参考开源项目
 
 [Auto_Check_In](https://github.com/BNDou/Auto_Check_In/blob/main/checkIn_Quark.py)
+[kuake_qiandao](https://github.com/achieve-dream1221/kuake_qiandao)
+[Quark_Auot_Check_In](https://github.com/Liu8Can/Quark_Auot_Check_In)
 
 ## 配置
 
@@ -42,3 +44,4 @@
 ## Github Actions自动签到配置
 
 ![img.png](docs/secrets.png)
+
