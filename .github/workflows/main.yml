@@ -3,7 +3,7 @@ name: 夸克网盘自动签到脚本
 on:
   schedule:
     # 定时执行，默认UTC时区， 中国时区需要+8小时， 中国时间每天10:05执行
-    - cron: '5 2 * * *'
+    - cron: '0 3 * * *'
 
   workflow_dispatch:  # 允许手动触发
 jobs:
