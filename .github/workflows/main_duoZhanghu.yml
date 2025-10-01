@@ -1,0 +1,29 @@
+name: 夸克网盘多账户签到
+
+on:
+  schedule:
+    - cron: "5 2 * * *"   # UTC 02:05 → 北京时间 10:05
+  workflow_dispatch: {}
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          QUARK_ACCOUNTS: ${{ secrets.QUARK_ACCOUNTS }}
+          QUARK_KPS: ${{ secrets.QUARK_KPS }}
+          QUARK_SIGN: ${{ secrets.QUARK_SIGN }}
+          QUARK_VCODE: ${{ secrets.QUARK_VCODE }}
+        run: python main.py
