@@ -29,6 +29,15 @@
 | QUARK_SIGN  | 抓包参数的sign_wg |
 | QUARK_VCODE |  抓包参数的vcode  |
 
+- 新增的支持多用户的脚本+配置，参数传入方式如下：
+一个 QUARK_ACCOUNTS
+[
+  {"kps":"kpsA","sign":"signA","vcode":"vcodeA","alias":"主号"},
+  {"kps":"kpsB","sign":"signB","vcode":"vcodeB","alias":"小号"}
+]
+
+
+
 ### 可选配置
 
 > qq邮箱可访问网页的，然后点击头像，进入账号与安全，如图获取授权码即密码
@@ -46,5 +55,6 @@
 ## Github Actions自动签到配置
 
 ![img.png](docs/secrets.png)
+
 
 
