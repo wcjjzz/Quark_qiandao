@@ -20,10 +20,19 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Run script
+      - name: Run multi-account script
         env:
           QUARK_ACCOUNTS: ${{ secrets.QUARK_ACCOUNTS }}
           QUARK_KPS: ${{ secrets.QUARK_KPS }}
           QUARK_SIGN: ${{ secrets.QUARK_SIGN }}
           QUARK_VCODE: ${{ secrets.QUARK_VCODE }}
-        run: python main.py
+        run: |
+          echo "当前目录内容："
+          ls -al
+          if [ -f main_duoZhanghu.py ]; then
+            echo "运行 main_duoZhanghu.py ..."
+            python main_duoZhanghu.py
+          else
+            echo "未找到 main_duoZhanghu.py，尝试运行 main.py ..."
+            python main.py
+          fi
