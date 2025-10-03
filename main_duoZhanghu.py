@@ -41,21 +41,54 @@ def load_accounts():
     return accounts
 
 
+def human_unit(bytes_: int) -> str:
+    """人类可读容量单位（从单账户脚本复制）"""
+    units = ("MB", "GB", "TB", "PB")
+    bytes_ = bytes_ / 1024 / 1024  # 先转成MB
+    i = 0
+    while bytes_ >= 1024 and i < len(units)-1:
+        bytes_ /= 1024
+        i += 1
+    return f"{bytes_:.2f} {units[i]}"
+
 def sign_once(kps, sign, vcode, alias):
-    """单个账号签到"""
+    """单个账号签到（修正接口与参数）"""
     try:
+        # 1. 正确的签到URL（和单账户一致）
+        url = "https://drive-m.quark.cn/1/clouddrive/capacity/growth/sign"
+        # 2. 正确的Query参数（和单账户一致，pr、fr是必传标识）
+        query_params = {
+            "pr": "ucpro",
+            "fr": "android",
+            "kps": kps,
+            "sign": sign,
+            "vcode": vcode,
+        }
+        # 3. 正确的请求体（和单账户一致，sign_cyclic=True是循环签到标识）
+        request_body = {"sign_cyclic": True}
+        # 4. 请求头保留Cookie（无需额外修改）
         headers = {
             "Cookie": f"QUARK_KPS={kps}; QUARK_SIGN={sign}; QUARK_VCODE={vcode}",
             "User-Agent": "okhttp/3.12.12"
         }
-        url = "https://drive-m.quark.cn/1/clouddrive/capacity/growth/sign_in"
-        resp = requests.post(url, headers=headers, timeout=15)
+        # 5. 发送POST请求（带参数和请求体）
+        resp = requests.post(
+            url=url,
+            params=query_params,  # 传query参数
+            json=request_body,    # 传请求体
+            headers=headers,
+            timeout=15
+        )
+        # 6. 输出响应内容（方便调试，可选但推荐加）
+        print(f"[{alias}] 响应状态码: {resp.status_code}")
+        print(f"[{alias}] 响应内容: {resp.text}")
+        
         data = resp.json()
         if data.get("code") == 0:
-            reward = data.get("data", {}).get("capacity", "未知")
-            return True, f"{alias} 签到成功，获得 {reward} 容量"
+            reward = data.get("data", {}).get("sign_daily_reward", 0)
+            return True, f"{alias} 签到成功，获得 {human_unit(reward)} 容量"
         else:
-            return False, f"{alias} 签到失败：{data}"
+            return False, f"{alias} 签到失败：{data.get('message', '未知错误')}"
     except Exception as e:
         return False, f"{alias} 异常：{e}\n{traceback.format_exc()}"
 
